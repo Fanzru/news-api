@@ -1,6 +1,7 @@
+
+
 class UsersController < ApplicationController
   before_action :set_user, only: %i[ show edit update destroy ]
-
   # GET /users or /users.json
   def index
     @users = User.all
@@ -51,7 +52,7 @@ class UsersController < ApplicationController
   # PATCH/PUT /users/1 or /users/1.json
   def update
     begin
-      @user = User.where(id: request.body.id).limit(1).update_all(name: request.body.name)
+      @user = User.where(id: params[:id]).update(name: request.params[:name] )
       render json: {
         "code": 200,
         "status": true,
