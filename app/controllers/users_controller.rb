@@ -56,26 +56,35 @@ class UsersController < ApplicationController
       render json: {
         "code": 200,
         "status": true,
-        "message": "save data successfully",
+        "message": "update data successfully",
         "value": @user,
       }
     rescue
       render json: {
         "code": 400,
         "status": false,
-        "message": "save data failed",
+        "message": "update data failed",
       }
     end
   end
 
   # DELETE /users/1 or /users/1.json
   def destroy
-    @user.destroy
-
-    respond_to do |format|
-      format.html { redirect_to users_url, notice: "User was successfully destroyed." }
-      format.json { head :no_content }
+    begin
+      @user.destroy
+      render json: {
+        "code": 200,
+        "status": true,
+        "message": "delete data successfully",
+      }
+    rescue
+      render json: {
+        "code": 400,
+        "status": false,
+        "message": "delete data failed",
+      }
     end
+
   end
 
   private
