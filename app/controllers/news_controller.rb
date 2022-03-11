@@ -14,6 +14,13 @@ class NewsController < ApplicationController
 
   # GET /news/1 or /news/1.json
   def show
+    @user = User.find(params[:id])
+    render json: {
+      "code": 200,
+      "status": true,
+      "message": "get all data successfully",
+      "value": @user,
+    }
   end
 
   # GET /news/new
@@ -33,41 +40,35 @@ class NewsController < ApplicationController
 
   # POST /news or /news.json
   def create
-    skip_before_action :verify_authenticity_token
-    @news = News.new(news_params)
-
-    respond_to do |format|
-      if @news.save
-        format.html { redirect_to news_url(@news), notice: "News was successfully created." }
-        format.json { render :show, status: :created, location: @news }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @news.errors, status: :unprocessable_entity }
-      end
+    begin
+      @news = News.create(
+          title: request.params['title'],
+          description: request.params['description'],
+          users_id: request.params['users_id'],
+      )
+      render json: {
+        "code": 200,
+        "status": true,
+        "message": "save data successfully",
+        "value": @news,
+      }
+    rescue
+      render json: {
+        "code": 400,
+        "status": false,
+        "message": "save data failed",
+      }
     end
   end
 
   # PATCH/PUT /news/1 or /news/1.json
   def update
-    respond_to do |format|
-      if @news.update(news_params)
-        format.html { redirect_to news_url(@news), notice: "News was successfully updated." }
-        format.json { render :show, status: :ok, location: @news }
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @news.errors, status: :unprocessable_entity }
-      end
-    end
+    
   end
 
   # DELETE /news/1 or /news/1.json
   def destroy
-    @news.destroy
-
-    respond_to do |format|
-      format.html { redirect_to news_index_url, notice: "News was successfully destroyed." }
-      format.json { head :no_content }
-    end
+    
   end
 
   private
